@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Получение_скидки
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("получ_скидки_id")]
         public int получ_скидки_id { get; set; }
 
@@ -24,9 +25,9 @@ namespace TaxiAPI.Models
 
         // Навигационные свойства
         [ForeignKey("заказ_id")]
-        public Заказы Заказ { get; set; }
+        public virtual Заказы Заказ { get; set; }
 
         [ForeignKey("скидка_id")]
-        public Скидки Скидка { get; set; }
+        public virtual Скидки Скидка { get; set; }
     }
 }

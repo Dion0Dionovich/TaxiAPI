@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Услуги
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("услуга_id")]
         public int услуга_id { get; set; }
 
@@ -28,6 +29,6 @@ namespace TaxiAPI.Models
         public bool активна { get; set; }
 
         // Навигационное свойство
-        public ICollection<Услуги_в_заказе> УслугиВЗаказе { get; set; }
+        public virtual ICollection<Услуги_в_заказе> УслугиВЗаказе { get; set; }
     }
 }

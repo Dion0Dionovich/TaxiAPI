@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Уведомления
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("уведомление_id")]
         public int уведомление_id { get; set; }
 
@@ -37,9 +38,9 @@ namespace TaxiAPI.Models
 
         // Навигационные свойства
         [ForeignKey("пользователи_id")]
-        public Пользователи Пользователь { get; set; }
+        public virtual Пользователи Пользователь { get; set; }
 
         [ForeignKey("заказ_id")]
-        public Заказы? Заказ { get; set; }
+        public virtual Заказы? Заказ { get; set; }
     }
 }

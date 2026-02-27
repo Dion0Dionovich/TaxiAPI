@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Пользователи
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("пользователи_id")]
         public int пользователи_id { get; set; }
 
@@ -40,7 +41,7 @@ namespace TaxiAPI.Models
         public DateTime дата_регистрации { get; set; }
 
         // Навигационные свойства
-        public ICollection<Заказы> Заказы { get; set; }
-        public ICollection<Уведомления> Уведомления { get; set; }
+        public virtual ICollection<Заказы> Заказы { get; set; }
+        public virtual ICollection<Уведомления> Уведомления { get; set; }
     }
 }

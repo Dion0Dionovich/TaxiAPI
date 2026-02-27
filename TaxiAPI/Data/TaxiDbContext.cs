@@ -27,17 +27,20 @@ namespace TaxiAPI.Data
             // Уникальные индексы
             modelBuilder.Entity<Автомобили>()
                 .HasIndex(a => a.номерной_знак)
-                .IsUnique();
+                .IsUnique()
+                .HasDatabaseName("UQ__Автомоби__5A898D6649AFC14A");
 
             modelBuilder.Entity<Пользователи>()
                 .HasIndex(p => p.логин)
-                .IsUnique();
+                .IsUnique()
+                .HasDatabaseName("UQ__Пользова__5EB64DCCF03002C7");
 
             modelBuilder.Entity<Пользователи>()
                 .HasIndex(p => p.номер_телефона)
-                .IsUnique();
+                .IsUnique()
+                .HasDatabaseName("UQ__Пользова__8145ED7A85FBB63B");
 
-            // Настройка связей
+            // Настройка связей с правильными именами FK
             modelBuilder.Entity<Автомобили>()
                 .HasOne(a => a.Тариф)
                 .WithMany(t => t.Автомобили)
@@ -78,6 +81,7 @@ namespace TaxiAPI.Data
                 .HasOne(p => p.Скидка)
                 .WithMany(s => s.ПолучениеСкидок)
                 .HasForeignKey(p => p.скидка_id)
+                .HasConstraintName("FK__Получение__скидк__60A75C0F")
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Услуги_в_заказе>()

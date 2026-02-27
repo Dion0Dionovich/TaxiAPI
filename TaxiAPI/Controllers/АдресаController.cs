@@ -69,6 +69,11 @@ namespace TaxiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Адреса>> PostАдрес(Адреса адрес)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.Адреса.Add(адрес);
             await _context.SaveChangesAsync();
 
@@ -82,6 +87,11 @@ namespace TaxiAPI.Controllers
             if (id != адрес.адрес_id)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             _context.Entry(адрес).State = EntityState.Modified;

@@ -33,13 +33,13 @@ namespace TaxiAPI.Controllers
                     тариф_id = a.тариф_id,
                     класс_авто = a.класс_авто,
                     активен = a.активен,
-                    Тариф = new ТарифDto
+                    Тариф = a.Тариф != null ? new ТарифDto
                     {
                         тариф_id = a.Тариф.тариф_id,
                         название = a.Тариф.название,
                         цена = a.Тариф.цена,
                         описание = a.Тариф.описание
-                    }
+                    } : null
                 })
                 .ToListAsync();
 
@@ -63,13 +63,13 @@ namespace TaxiAPI.Controllers
                     тариф_id = a.тариф_id,
                     класс_авто = a.класс_авто,
                     активен = a.активен,
-                    Тариф = new ТарифDto
+                    Тариф = a.Тариф != null ? new ТарифDto
                     {
                         тариф_id = a.Тариф.тариф_id,
                         название = a.Тариф.название,
                         цена = a.Тариф.цена,
                         описание = a.Тариф.описание
-                    }
+                    } : null
                 })
                 .ToListAsync();
 
@@ -93,13 +93,13 @@ namespace TaxiAPI.Controllers
                     тариф_id = a.тариф_id,
                     класс_авто = a.класс_авто,
                     активен = a.активен,
-                    Тариф = new ТарифDto
+                    Тариф = a.Тариф != null ? new ТарифDto
                     {
                         тариф_id = a.Тариф.тариф_id,
                         название = a.Тариф.название,
                         цена = a.Тариф.цена,
                         описание = a.Тариф.описание
-                    }
+                    } : null
                 })
                 .FirstOrDefaultAsync();
 
@@ -128,13 +128,13 @@ namespace TaxiAPI.Controllers
                     тариф_id = a.тариф_id,
                     класс_авто = a.класс_авто,
                     активен = a.активен,
-                    Тариф = new ТарифDto
+                    Тариф = a.Тариф != null ? new ТарифDto
                     {
                         тариф_id = a.Тариф.тариф_id,
                         название = a.Тариф.название,
                         цена = a.Тариф.цена,
                         описание = a.Тариф.описание
-                    }
+                    } : null
                 })
                 .ToListAsync();
 
@@ -145,6 +145,11 @@ namespace TaxiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Автомобили>> PostАвтомобиль(Автомобили автомобиль)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.Автомобили.Add(автомобиль);
             await _context.SaveChangesAsync();
 
@@ -158,6 +163,11 @@ namespace TaxiAPI.Controllers
             if (id != автомобиль.автомобиль_id)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             _context.Entry(автомобиль).State = EntityState.Modified;

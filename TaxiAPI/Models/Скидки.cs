@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Скидки
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("скидка_id")]
         public int скидка_id { get; set; }
 
@@ -37,6 +38,6 @@ namespace TaxiAPI.Models
         public bool активна { get; set; }
 
         // Навигационное свойство
-        public ICollection<Получение_скидки> ПолучениеСкидок { get; set; }
+        public virtual ICollection<Получение_скидки> ПолучениеСкидок { get; set; }
     }
 }

@@ -41,6 +41,11 @@ namespace TaxiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Услуги>> PostУслуга(Услуги услуга)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.Услуги.Add(услуга);
             await _context.SaveChangesAsync();
 
@@ -54,6 +59,11 @@ namespace TaxiAPI.Controllers
             if (id != услуга.услуга_id)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             _context.Entry(услуга).State = EntityState.Modified;
@@ -87,7 +97,17 @@ namespace TaxiAPI.Controllers
                 return NotFound();
             }
 
-            услуга.активна = false;
+            // Проверка, используется ли услуга в заказах
+            var используется = await _context.УслугиВЗаказе.AnyAsync(uz => uz.услуга_id == id);
+            if (используется)
+            {
+                // Мягкое удаление - деактивируем
+                услуга.активна = false;
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+
+            _context.Услуги.Remove(услуга);
             await _context.SaveChangesAsync();
 
             return NoContent();

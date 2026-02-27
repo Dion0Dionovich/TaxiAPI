@@ -20,6 +20,12 @@ namespace TaxiAPI.Controllers
         [HttpGet("пользователя/{пользовательId}")]
         public async Task<ActionResult<IEnumerable<Уведомления>>> GetУведомленияПользователя(int пользовательId)
         {
+            var пользователь = await _context.Пользователи.FindAsync(пользовательId);
+            if (пользователь == null)
+            {
+                return NotFound($"Пользователь с ID {пользовательId} не найден");
+            }
+
             return await _context.Уведомления
                 .Where(u => u.пользователи_id == пользовательId)
                 .OrderByDescending(u => u.временная_метка)
@@ -30,6 +36,12 @@ namespace TaxiAPI.Controllers
         [HttpGet("пользователя/{пользовательId}/непрочитанные")]
         public async Task<ActionResult<IEnumerable<Уведомления>>> GetНепрочитанныеУведомления(int пользовательId)
         {
+            var пользователь = await _context.Пользователи.FindAsync(пользовательId);
+            if (пользователь == null)
+            {
+                return NotFound($"Пользователь с ID {пользовательId} не найден");
+            }
+
             return await _context.Уведомления
                 .Where(u => u.пользователи_id == пользовательId && u.прочитано == false)
                 .OrderByDescending(u => u.временная_метка)
@@ -70,6 +82,12 @@ namespace TaxiAPI.Controllers
         [HttpPatch("пользователя/{пользовательId}/прочитатьвсе")]
         public async Task<IActionResult> ОтметитьВсеКакПрочитанные(int пользовательId)
         {
+            var пользователь = await _context.Пользователи.FindAsync(пользовательId);
+            if (пользователь == null)
+            {
+                return NotFound($"Пользователь с ID {пользовательId} не найден");
+            }
+
             var уведомления = await _context.Уведомления
                 .Where(u => u.пользователи_id == пользовательId && u.прочитано == false)
                 .ToListAsync();
@@ -88,6 +106,28 @@ namespace TaxiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Уведомления>> PostУведомление(Уведомления уведомление)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Проверка существования пользователя
+            var пользователь = await _context.Пользователи.FindAsync(уведомление.пользователи_id);
+            if (пользователь == null)
+            {
+                return BadRequest($"Пользователь с ID {уведомление.пользователи_id} не найден");
+            }
+
+            // Проверка существования заказа (если указан)
+            if (уведомление.заказ_id.HasValue)
+            {
+                var заказ = await _context.Заказы.FindAsync(уведомление.заказ_id.Value);
+                if (заказ == null)
+                {
+                    return BadRequest($"Заказ с ID {уведомление.заказ_id} не найден");
+                }
+            }
+
             уведомление.временная_метка = DateTime.Now;
             уведомление.прочитано = false;
 

@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Адреса
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("адрес_id")]
         public int адрес_id { get; set; }
 
@@ -42,7 +43,7 @@ namespace TaxiAPI.Models
         public bool конечный_адрес { get; set; }
 
         // Навигационные свойства
-        public ICollection<Заказы> ЗаказыОтправления { get; set; }
-        public ICollection<Заказы> ЗаказыНазначения { get; set; }
+        public virtual ICollection<Заказы> ЗаказыОтправления { get; set; }
+        public virtual ICollection<Заказы> ЗаказыНазначения { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Услуги_в_заказе
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("услуга_в_заказе_id")]
         public int услуга_в_заказе_id { get; set; }
 
@@ -20,9 +21,9 @@ namespace TaxiAPI.Models
 
         // Навигационные свойства
         [ForeignKey("заказ_id")]
-        public Заказы Заказ { get; set; }
+        public virtual Заказы Заказ { get; set; }
 
         [ForeignKey("услуга_id")]
-        public Услуги Услуга { get; set; }
+        public virtual Услуги Услуга { get; set; }
     }
 }

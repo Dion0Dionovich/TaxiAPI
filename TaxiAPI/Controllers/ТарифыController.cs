@@ -61,6 +61,11 @@ namespace TaxiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ТарифDto>> PostТариф(Тарифы тариф)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.Тарифы.Add(тариф);
             await _context.SaveChangesAsync();
 
@@ -74,6 +79,11 @@ namespace TaxiAPI.Controllers
             if (id != тариф.тариф_id)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             _context.Entry(тариф).State = EntityState.Modified;
@@ -105,6 +115,13 @@ namespace TaxiAPI.Controllers
             if (тариф == null)
             {
                 return NotFound();
+            }
+
+            // Проверка, используется ли тариф в автомобилях
+            var используется = await _context.Автомобили.AnyAsync(a => a.тариф_id == id);
+            if (используется)
+            {
+                return BadRequest("Невозможно удалить тариф, так как он используется в автомобилях");
             }
 
             _context.Тарифы.Remove(тариф);

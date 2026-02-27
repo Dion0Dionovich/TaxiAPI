@@ -115,6 +115,22 @@ namespace TaxiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Пользователи>> PostПользователь(Пользователи пользователь)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Проверка уникальности логина и телефона
+            if (await _context.Пользователи.AnyAsync(p => p.логин == пользователь.логин))
+            {
+                return BadRequest("Пользователь с таким логином уже существует");
+            }
+
+            if (await _context.Пользователи.AnyAsync(p => p.номер_телефона == пользователь.номер_телефона))
+            {
+                return BadRequest("Пользователь с таким номером телефона уже существует");
+            }
+
             пользователь.дата_регистрации = DateTime.Now;
             пользователь.статус = "активен";
 
@@ -131,6 +147,11 @@ namespace TaxiAPI.Controllers
             if (id != пользователь.пользователи_id)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             _context.Entry(пользователь).State = EntityState.Modified;

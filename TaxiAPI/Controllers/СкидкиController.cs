@@ -46,6 +46,13 @@ namespace TaxiAPI.Controllers
         {
             var текущаяДата = DateTime.Now;
 
+            // Проверка существования пользователя
+            var пользователь = await _context.Пользователи.FindAsync(пользовательId);
+            if (пользователь == null)
+            {
+                return NotFound($"Пользователь с ID {пользовательId} не найден");
+            }
+
             var скидки = await _context.Скидки
                 .Where(s => s.активна && s.дата_начала <= текущаяДата && s.дата_окончания >= текущаяДата)
                 .ToListAsync();
@@ -57,6 +64,11 @@ namespace TaxiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Скидки>> PostСкидка(Скидки скидка)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.Скидки.Add(скидка);
             await _context.SaveChangesAsync();
 
@@ -70,6 +82,11 @@ namespace TaxiAPI.Controllers
             if (id != скидка.скидка_id)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             _context.Entry(скидка).State = EntityState.Modified;

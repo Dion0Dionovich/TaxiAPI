@@ -7,6 +7,7 @@ namespace TaxiAPI.Models
     public class Автомобили
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("автомобиль_id")]
         public int автомобиль_id { get; set; }
 
@@ -45,7 +46,8 @@ namespace TaxiAPI.Models
 
         // Навигационные свойства
         [ForeignKey("тариф_id")]
-        public Тарифы Тариф { get; set; }
-        public ICollection<Заказы> Заказы { get; set; }
+        public virtual Тарифы Тариф { get; set; }
+
+        public virtual ICollection<Заказы> Заказы { get; set; }
     }
 }
